@@ -1,0 +1,1 @@
+Be.Windows.Forms.HexBox

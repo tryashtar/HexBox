@@ -1169,15 +1169,15 @@ namespace Be.Windows.Forms
 		/// </summary>
 		int _lastThumbtrack;
 		/// <summary>
-		/// Contains the border´s left shift
+		/// Contains the borderï¿½s left shift
 		/// </summary>
 		int _recBorderLeft = SystemInformation.Border3DSize.Width;
 		/// <summary>
-		/// Contains the border´s right shift
+		/// Contains the borderï¿½s right shift
 		/// </summary>
 		int _recBorderRight = SystemInformation.Border3DSize.Width;
 		/// <summary>
-		/// Contains the border´s top shift
+		/// Contains the borderï¿½s top shift
 		/// </summary>
 		int _recBorderTop = SystemInformation.Border3DSize.Height;
 		/// <summary>
@@ -2152,7 +2152,9 @@ namespace Be.Windows.Forms
 			else if (da.GetDataPresent(typeof(string)))
 			{
 				string sBuffer = (string)da.GetData(typeof(string));
-				buffer = System.Text.Encoding.ASCII.GetBytes(sBuffer);
+				buffer = ConvertHexToBytes(sBuffer);
+				if (buffer == null)
+					return;
 			}
 			else
 			{
@@ -3243,9 +3245,9 @@ namespace Be.Windows.Forms
 		} long _lineInfoOffset = 0;
 
 		/// <summary>
-		/// Gets or sets the hex box´s border style.
+		/// Gets or sets the hex boxï¿½s border style.
 		/// </summary>
-		[DefaultValue(typeof(BorderStyle), "Fixed3D"), Category("Hex"), Description("Gets or sets the hex box´s border style.")]
+		[DefaultValue(typeof(BorderStyle), "Fixed3D"), Category("Hex"), Description("Gets or sets the hex boxï¿½s border style.")]
 		public BorderStyle BorderStyle
 		{
 			get { return _borderStyle; }
@@ -3587,21 +3589,38 @@ namespace Be.Windows.Forms
 			if (string.IsNullOrEmpty(hex))
 				return null;
 			hex = hex.Trim();
-			var hexArray = hex.Split(' ');
-			var byteArray = new byte[hexArray.Length];
 
-			for (int i = 0; i < hexArray.Length; i++)
+			var list = new List<byte>();
+			byte last_byte = 0;
+			string current_digits = "";
+			for (int i = 0; i < hex.Length; i++)
 			{
-				var hexValue = hexArray[i];
-
-				byte b;
-				var isByte = ConvertHexToByte(hexValue, out b);
-				if (!isByte)
-					return null;
-				byteArray[i] = b;
+				char digit = hex[i];
+				if (Char.IsWhiteSpace(digit))
+				{
+					if (current_digits != "")
+						list.Add(last_byte);
+					current_digits = "";
+				}
+				else
+				{
+					bool valid = ConvertHexToByte(current_digits + digit, out byte result);
+					if (!valid)
+					{
+						if (current_digits != "")
+						{
+							list.Add(last_byte);
+							i--;
+						}
+						current_digits = "";
+					}
+					else
+						current_digits += digit;
+					last_byte = result;
+				}
 			}
-
-			return byteArray;
+			list.Add(last_byte);
+			return list.ToArray();
 		}
 
 		bool ConvertHexToByte(string hex, out byte b)

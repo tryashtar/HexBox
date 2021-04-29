@@ -867,17 +867,17 @@
         </member>
         <member name="F:Be.Windows.Forms.HexBox._recBorderLeft">
             <summary>
-            Contains the border´s left shift
+            Contains the border's left shift
             </summary>
         </member>
         <member name="F:Be.Windows.Forms.HexBox._recBorderRight">
             <summary>
-            Contains the border´s right shift
+            Contains the border's right shift
             </summary>
         </member>
         <member name="F:Be.Windows.Forms.HexBox._recBorderTop">
             <summary>
-            Contains the border´s top shift
+            Contains the border's top shift
             </summary>
         </member>
         <member name="F:Be.Windows.Forms.HexBox._recBorderBottom">
@@ -1280,7 +1280,7 @@
         </member>
         <member name="P:Be.Windows.Forms.HexBox.BorderStyle">
             <summary>
-            Gets or sets the hex box´s border style.
+            Gets or sets the hex box's border style.
             </summary>
         </member>
         <member name="P:Be.Windows.Forms.HexBox.StringViewVisible">
